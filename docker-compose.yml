@@ -1,0 +1,20 @@
+version: '3.8'
+services:
+  blog-app:
+    build: .
+    environment:
+      - PORT=3000
+      - DB_URI=mongodb://mongodb:27017/blog
+      - USER_SERVICE=http://user-service:3001
+      - JWT_KEY=j5723hfgs9
+    networks:
+      - database
+      - nginx
+
+networks:
+  database:
+    external: true
+    name: database_docker-network
+  nginx:
+    external: true
+    name: users-service_nginx
