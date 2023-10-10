@@ -12,14 +12,26 @@ const verifyToken = async (req, res, next) => {
             })
         }
         const decode = await jwt.verify(req.headers.token, process.env.JWT_KEY);
+        const userId = decode.userId;
+        const token = req.headers.token;
 
-        req.userId = decode;
-        req.token = req.headers.token;
+        req.userId = userId
+        req.token = token;
+        req.session.userId = userId;
+
+        const userSession = await redisClient.SISMEMBER(`user:token:${userId}`, token);
+
+        if(!userSession){
+            return res.status(400).send({
+                status: "Failed",
+                error: "Session expired, please log in."
+            })
+        }
 
         next();
     }catch(err){
         console.error("----- Error in Authorization verifyToken method -----", err);
-        res.status(400).send({
+        return res.status(400).send({
             status: "Failed",
             error: "Unable to verify the user"
         })
