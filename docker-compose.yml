@@ -7,6 +7,9 @@ services:
       - DB_URI=mongodb://mongodb:27017/blog
       - USER_SERVICE=http://user-service:3001
       - JWT_KEY=j5723hfgs9
+      - REDIS_URI=redis://localhost:6379/
+      - REDIS_PORT=6379
+      - REDIS_SECRET=yh93gjso64
     networks:
       - database
       - nginx
